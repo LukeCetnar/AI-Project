@@ -173,27 +173,27 @@ int main()
             //empty L1 in search of the desired block
             while (Current.L1.back() != Desired.L1.at(stackIndex))
             {
-                std::cout << "Moving" << std::endl;
+                std::cout << "Stacking " << Current.L1.back() << " to Stack L2 with Arm2" << std::endl;
                 Current.L2.push_back(Current.L1.back());
                 Current.L1.pop_back();
                 printBlocks(Current);
             }
             // after this is complete then the state should be L1 whith the desired block on top
             //then we place it in arm 1 to hold onto
-            std::cout << "Picking" << std::endl;
+            std::cout << "Pick up " << Current.L1.back() << " in arm1" << std::endl;
             Current.arm1 = Current.L1.back();
             Current.L1.pop_back();
             printBlocks(Current);
             //now that the block is in one of the arm i am going to move all of the block to L2 using arm 2
             while (Current.L2.size() != stackIndex)
             {
-                std::cout << "Moving" << std::endl;
+                std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
                 Current.L1.push_back(Current.L2.back());
                 Current.L2.pop_back();
                 printBlocks(Current);
             }
             // now place the arm2 block onto L1 `
-            std::cout << "Placing" << std::endl;
+            std::cout << "Put Down from Arm1" << Current.arm1 << "to Stack L2" << std::endl;
             Current.L2.push_back(Current.arm1);
             Current.arm1 = ' ';
             printBlocks(Current);
@@ -206,27 +206,27 @@ int main()
 
             while (Current.L2.back() != Desired.L1.at(stackIndex))
             {
-                std::cout << "Moving" << std::endl;
+                std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
                 Current.L1.push_back(Current.L2.back());
                 Current.L2.pop_back();
                 printBlocks(Current);
             }
             // after this is complete then the state should be L1 whith the desired block on top
             //then we place it in arm 1 to hold onto
-            std::cout << "Picking" << std::endl;
+            std::cout << "Pick up " << Current.L2.back() << " in arm1" << std::endl;
             Current.arm1 = Current.L2.back();
             Current.L2.pop_back();
             printBlocks(Current);
             //now that the block is in one of the arm i am going to move all of the block to L2 using arm 2
             while (Current.L1.size() != stackIndex)
             {
-                std::cout << "Moving" << std::endl;
+                std::cout << "Stacking " << Current.L1.back() << " to Stack L2 with Arm2" << std::endl;
                 Current.L2.push_back(Current.L1.back());
                 Current.L1.pop_back();
                 printBlocks(Current);
             }
             // now place the arm2 block onto L1 `
-            std::cout << "Placing" << std::endl;
+            std::cout << "Put Down from Arm1 " << Current.arm1 << " to Stack L1 " << std::endl;
             Current.L1.push_back(Current.arm1);
             Current.arm1 = ' ';
             printBlocks(Current);
@@ -263,68 +263,90 @@ int main()
             }
 
         }
-
-        if (searchStacks(Current, Desired.L2.at(stackIndex)))
-        {//empty L1 in search of the desired block
-            while (Current.L1.back() != Desired.L2.at(stackIndex))
-            {
-                std::cout << "Moving" << std::endl;
-                Current.L2.push_back(Current.L1.back());
-                Current.L1.pop_back();
-                printBlocks(Current);
-            }
-            // after this is complete then the state should be L1 whith the desired block on top
-            //then we place it in arm 1 to hold onto
-            std::cout << "Picking" << std::endl;
-            Current.arm1 = Current.L1.back();
-            Current.L1.pop_back();
-            printBlocks(Current);
-            //now that the block is in one of the arm i am going to move all of the block to L1 using arm 2
-            while (Current.L2.size() != stackIndex)
-            {
-                std::cout << "Moving" << std::endl;
-                Current.L1.push_back(Current.L2.back());
-                Current.L2.pop_back();
-                printBlocks(Current);
-            }
-            // now place the arm2 block onto L1 `
-            std::cout << "Placing" << std::endl;
-            Current.L2.push_back(Current.arm1);
-            Current.arm1 = ' ';
-            printBlocks(Current);
-
-
-        }
-        else
-        {//empty L1 in search of the desired block
-            while (Current.L2.back() != Desired.L2.at(stackIndex))
-            {
-                std::cout << "Moving" << std::endl;
-                Current.L1.push_back(Current.L2.back());
-                Current.L2.pop_back();
-                printBlocks(Current);
-            }
-            // after this is complete then the state should be L1 whith the desired block on top
-            //then we place it in arm 1 to hold onto
-            std::cout << "Picking" << std::endl;
+        if (Current.L2.size() > Desired.L2.size()) 
+        {
+            std::cout << "Pick up " << Current.L2.back() << " in arm1" << std::endl;
+            if (Current.arm1 == ' ') {
             Current.arm1 = Current.L2.back();
             Current.L2.pop_back();
             printBlocks(Current);
-            //now that the block is in one of the arm, move all of the block to L1 using arm 2
-            while (Current.L2.size() != stackIndex)
+
+            }
+            else
             {
-                std::cout << "Moving" << std::endl;
-                Current.L1.push_back(Current.L2.back());
+                Current.arm2 = Current.L2.back();
                 Current.L2.pop_back();
                 printBlocks(Current);
-            }
-            // now place the arm1 block onto L2
-            std::cout << "Placing" << std::endl;
-            Current.L2.push_back(Current.arm1);
-            Current.arm1 = ' ';
-            printBlocks(Current);
-;
 
+            }
+            
+
+        
+        }
+        else {
+
+            if (searchStacks(Current, Desired.L2.at(stackIndex)))
+            {//empty L1 in search of the desired block
+                while (Current.L1.back() != Desired.L2.at(stackIndex))
+                {
+                    std::cout << "Stacking " << Current.L1.back() << " to Stack L2 with Arm2" << std::endl;
+                    Current.L2.push_back(Current.L1.back());
+                    Current.L1.pop_back();
+                    printBlocks(Current);
+                }
+                // after this is complete then the state should be L1 whith the desired block on top
+                //then we place it in arm 1 to hold onto
+                std::cout << "Pick up " << Current.L1.back() << " in arm1" << std::endl;
+                Current.arm1 = Current.L1.back();
+                Current.L1.pop_back();
+                printBlocks(Current);
+                //now that the block is in one of the arm i am going to move all of the block to L1 using arm 2
+                while (Current.L2.size() != stackIndex)
+                {
+                    std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
+                    Current.L1.push_back(Current.L2.back());
+                    Current.L2.pop_back();
+                    printBlocks(Current);
+                }
+                // now place the arm2 block onto L1 `
+                std::cout << "Put Down from Arm1 " << Current.arm1 << " to Stack L2" << std::endl;
+                Current.L2.push_back(Current.arm1);
+                Current.arm1 = ' ';
+                printBlocks(Current);
+
+
+            }
+            else
+            {//empty L1 in search of the desired block
+                while (Current.L2.back() != Desired.L2.at(stackIndex))
+                {
+                    std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
+                    Current.L1.push_back(Current.L2.back());
+                    Current.L2.pop_back();
+                    printBlocks(Current);
+                }
+                // after this is complete then the state should be L1 whith the desired block on top
+                //then we place it in arm 1 to hold onto
+                std::cout << "Pick up " << Current.L2.back() << " in arm1" << std::endl;
+                Current.arm1 = Current.L2.back();
+                Current.L2.pop_back();
+                printBlocks(Current);
+                //now that the block is in one of the arm, move all of the block to L1 using arm 2
+                while (Current.L2.size() != stackIndex)
+                {
+                    std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
+                    Current.L1.push_back(Current.L2.back());
+                    Current.L2.pop_back();
+                    printBlocks(Current);
+                }
+                // now place the arm1 block onto L2
+                std::cout << "Put Down from Arm1 " << Current.arm1 << " to Stack L2" << std::endl;
+                Current.L2.push_back(Current.arm1);
+                Current.arm1 = ' ';
+                printBlocks(Current);
+                ;
+
+            }
         }
 
     }
