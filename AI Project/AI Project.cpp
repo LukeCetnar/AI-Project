@@ -145,7 +145,7 @@ int main()
     {
         if (!Current.L1.empty())
         {
-            std::cout << "stack index: " << stackIndex << std::endl;
+            //std::cout << "stack index: " << stackIndex << std::endl;
             try
             {
                 if (Current.L1.at(stackIndex) == Desired.L1.at(stackIndex))
@@ -173,7 +173,7 @@ int main()
             //empty L1 in search of the desired block
             while (Current.L1.back() != Desired.L1.at(stackIndex))
             {
-                std::cout << "poppin" << std::endl;
+                std::cout << "Moving" << std::endl;
                 Current.L2.push_back(Current.L1.back());
                 Current.L1.pop_back();
                 printBlocks(Current);
@@ -187,7 +187,7 @@ int main()
             //now that the block is in one of the arm i am going to move all of the block to L2 using arm 2
             while (Current.L2.size() != stackIndex)
             {
-                std::cout << "Stacking" << std::endl;
+                std::cout << "Moving" << std::endl;
                 Current.L1.push_back(Current.L2.back());
                 Current.L2.pop_back();
                 printBlocks(Current);
@@ -206,7 +206,7 @@ int main()
 
             while (Current.L2.back() != Desired.L1.at(stackIndex))
             {
-                std::cout << "poppin" << std::endl;
+                std::cout << "Moving" << std::endl;
                 Current.L1.push_back(Current.L2.back());
                 Current.L2.pop_back();
                 printBlocks(Current);
@@ -220,7 +220,7 @@ int main()
             //now that the block is in one of the arm i am going to move all of the block to L2 using arm 2
             while (Current.L1.size() != stackIndex)
             {
-                std::cout << "Stacking" << std::endl;
+                std::cout << "Moving" << std::endl;
                 Current.L2.push_back(Current.L1.back());
                 Current.L1.pop_back();
                 printBlocks(Current);
@@ -235,7 +235,7 @@ int main()
 
 
     }
-    std::cout << "L1 is compeltes in " << steps << " steps" << std::endl;
+    std::cout << "L1 is compelted in " << steps << " steps" << std::endl;
     //now that Stack L1 is sorted it is time to move onto stack L2
     // I also assume that all of the block are already in L2 just out of order.
 
@@ -244,7 +244,7 @@ int main()
     {
         if (!Current.L2.empty())
         {
-            std::cout << "stack index: " << stackIndex << std::endl;
+            //std::cout << "stack index: " << stackIndex << std::endl;
             try
             {
                 if (Current.L2.at(stackIndex) == Desired.L2.at(stackIndex))
@@ -268,7 +268,7 @@ int main()
         {//empty L1 in search of the desired block
             while (Current.L1.back() != Desired.L2.at(stackIndex))
             {
-                std::cout << "poppin" << std::endl;
+                std::cout << "Moving" << std::endl;
                 Current.L2.push_back(Current.L1.back());
                 Current.L1.pop_back();
                 printBlocks(Current);
@@ -282,7 +282,7 @@ int main()
             //now that the block is in one of the arm i am going to move all of the block to L1 using arm 2
             while (Current.L2.size() != stackIndex)
             {
-                std::cout << "Stacking" << std::endl;
+                std::cout << "Moving" << std::endl;
                 Current.L1.push_back(Current.L2.back());
                 Current.L2.pop_back();
                 printBlocks(Current);
@@ -299,7 +299,7 @@ int main()
         {//empty L1 in search of the desired block
             while (Current.L2.back() != Desired.L2.at(stackIndex))
             {
-                std::cout << "poppin" << std::endl;
+                std::cout << "Moving" << std::endl;
                 Current.L1.push_back(Current.L2.back());
                 Current.L2.pop_back();
                 printBlocks(Current);
@@ -313,7 +313,7 @@ int main()
             //now that the block is in one of the arm, move all of the block to L1 using arm 2
             while (Current.L2.size() != stackIndex)
             {
-                std::cout << "Stacking" << std::endl;
+                std::cout << "Moving" << std::endl;
                 Current.L1.push_back(Current.L2.back());
                 Current.L2.pop_back();
                 printBlocks(Current);
