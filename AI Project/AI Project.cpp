@@ -57,9 +57,6 @@ void printBlocks(Blocks B)
     }
 
 
-
-
-
     std::cout << "---" "\t" << "---" << std::endl;
     std::cout << "L1" "\t" << "L2" << std::endl;
     steps++;
@@ -147,25 +144,21 @@ int main()
 
 
     //Start the solve proccess
-    // step 0 check initial state of stack 1 to see if the bottm block matches
-    // step 1 identify the stack where the bottom block for stack 1 is
-    // step 2 emptpy that stack until the block is in an arm
-    // step 3 empty stack 1 into stack 2
-    // step 4 once stack 1 is empty place the block at the bottom
-    // step 5 repeat step 1-4 for the remaining blocks on stack 1
-    // step 6 repeat step 0-5 for stack 2
-    // step 7 check final state and complete
-    
+
 
     steps = 0;
     int stackIndex = 0;
+    //Step 1: Check to see if L1 Matches the desired L1
     while (Desired.L1 != Current.L1)
     {
+        //Step 1a: see if the bottom element matches, if so increment the stack index
+        //make sure stack has items in it, protects from out of range exception
         if (!Current.L1.empty())
         {
-            //std::cout << "stack index: " << stackIndex << std::endl;
+            //more code stuff to protect from out of range exception
             try
             {
+                
                 if (Current.L1.at(stackIndex) == Desired.L1.at(stackIndex))
                 {
                     stackIndex++;
@@ -185,10 +178,10 @@ int main()
 
 
 
-
+        //Step 1b: determine which stack has the desired element in it.
         if (searchStacks(Current, Desired.L1.at(stackIndex)))
         {
-            //empty L1 in search of the desired block
+            //Step 1c: unstack the identfied stack until the desired element is found
             while (Current.L1.back() != Desired.L1.at(stackIndex))
             {
                 std::cout << "Stacking " << Current.L1.back() << " to Stack L2 with Arm2" << std::endl;
@@ -197,12 +190,12 @@ int main()
                 printBlocks(Current);
             }
             // after this is complete then the state should be L1 whith the desired block on top
-            //then we place it in arm 1 to hold onto
+            //Step 1d:pick up the element into arm 1 to hold onto
             std::cout << "Pick up " << Current.L1.back() << " in arm1" << std::endl;
             Current.arm1 = Current.L1.back();
             Current.L1.pop_back();
             printBlocks(Current);
-            //now that the block is in one of the arm i am going to move all of the block to L2 using arm 2
+            //Step 1e: unstack L1 until the desired index is reached
             while (Current.L2.size() != stackIndex)
             {
                 std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
@@ -210,7 +203,7 @@ int main()
                 Current.L2.pop_back();
                 printBlocks(Current);
             }
-            // now place the arm2 block onto L1 `
+            //Step 1f: put down the held block in the correct place
             std::cout << "Put Down from Arm1" << Current.arm1 << "to Stack L2" << std::endl;
             Current.L2.push_back(Current.arm1);
             Current.arm1 = ' ';
@@ -258,6 +251,7 @@ int main()
     // I also assume that all of the block are already in L2 just out of order.
 
     stackIndex = 0;
+    //Step 2: Check to see if L2 Matches Desired L2
     while(Desired.L2 != Current.L2)
     {
         std::cout << "Starting L2" << std::endl;
@@ -371,7 +365,7 @@ int main()
     }
 
 
-
+    //Step 3: Declare success
     std::cout << "everything is compelte this took " << steps << " steps" << std::endl;
 
     std::cout << "Desired Block state\n";
