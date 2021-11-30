@@ -21,27 +21,45 @@ void printBlocks(Blocks B)
     std::cout << "Arm1"  << "\t" << "Arm2\n"<< B.arm1 << "\t" << B.arm2 << std::endl << std::endl;
     size_t max = B.L1.size() > B.L2.size() ? B.L1.size() : B.L2.size();
     size_t min = B.L1.size() < B.L2.size() ? B.L1.size() : B.L2.size();
-    for (int i = max - 1; i >= 0; i--)
-    {
-        if (i>=min && B.L1.size() > B.L2.size())
-        {
-            std::cout << B.L1.at(i) << "\t" << " " << std::endl;
-        }
-        else if(!(i >= min) && B.L1.size() > B.L2.size())
-        {
-            std::cout << B.L1.at(i) << "\t" << B.L2.at(i) << std::endl;
-        } 
-        if (i >= min && B.L1.size() < B.L2.size())
-        {
-            std::cout << " " << "\t" << B.L2.at(i) << std::endl;
-        }
-        else if (!(i >= min) && B.L1.size() < B.L2.size())
-        {
-            std::cout << B.L1.at(i) << "\t" << B.L2.at(i) << std::endl;
-        }
 
+    if (max == min) 
+    {
+        for (int i = max - 1; i >= 0; i--) 
+        {
+            std::cout << B.L1.at(i) << "\t" << B.L2.at(i) << std::endl;
+        }
 
     }
+    else
+    {
+        for (int i = max - 1; i >= 0; i--)
+        {
+            if (i >= min && B.L1.size() > B.L2.size())
+            {
+                std::cout << B.L1.at(i) << "\t" << " " << std::endl;
+            }
+            else if (!(i >= min) && B.L1.size() > B.L2.size())
+            {
+                std::cout << B.L1.at(i) << "\t" << B.L2.at(i) << std::endl;
+            }
+            if (i >= min && B.L1.size() < B.L2.size())
+            {
+                std::cout << " " << "\t" << B.L2.at(i) << std::endl;
+            }
+            else if (!(i >= min) && B.L1.size() < B.L2.size())
+            {
+                std::cout << B.L1.at(i) << "\t" << B.L2.at(i) << std::endl;
+            }
+
+
+        }
+
+    }
+
+
+
+
+
     std::cout << "---" "\t" << "---" << std::endl;
     std::cout << "L1" "\t" << "L2" << std::endl;
     steps++;
@@ -242,6 +260,7 @@ int main()
     stackIndex = 0;
     while(Desired.L2 != Current.L2)
     {
+        std::cout << "Starting L2" << std::endl;
         if (!Current.L2.empty())
         {
             //std::cout << "stack index: " << stackIndex << std::endl;
