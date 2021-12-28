@@ -1,348 +1,118 @@
 // AI Project.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+#include "Blocks.h"
 #include <iostream>
 #include <string>
 #include <vector>
-
-int steps = 0;
-struct Blocks {
-	std::vector <char> L1, L2;
-	char arm1 = ' ';
-	char arm2 = ' ';
+using std::vector;
+struct Node
+{
+	int state;
+	vector<Node*> child;
 };
 
-void printBlocks(Blocks B)
+// Utility function to create a new tree node
+Node* newNode(int key)
 {
-	std::cout << "Arm1" << "\t" << "Arm2\n" << B.arm1 << "\t" << B.arm2 << std::endl << std::endl;
-	size_t max = B.L1.size() > B.L2.size() ? B.L1.size() : B.L2.size();
-	size_t min = B.L1.size() < B.L2.size() ? B.L1.size() : B.L2.size();
-
-	if (max == min)
-	{
-		for (int i = max - 1; i >= 0; i--)
-		{
-			std::cout << B.L1.at(i) << "\t" << B.L2.at(i) << std::endl;
-		}
-	}
-	else
-	{
-		for (int i = max - 1; i >= 0; i--)
-		{
-			if (i >= min && B.L1.size() > B.L2.size())
-			{
-				std::cout << B.L1.at(i) << "\t" << " " << std::endl;
-			}
-			else if (!(i >= min) && B.L1.size() > B.L2.size())
-			{
-				std::cout << B.L1.at(i) << "\t" << B.L2.at(i) << std::endl;
-			}
-			if (i >= min && B.L1.size() < B.L2.size())
-			{
-				std::cout << " " << "\t" << B.L2.at(i) << std::endl;
-			}
-			else if (!(i >= min) && B.L1.size() < B.L2.size())
-			{
-				std::cout << B.L1.at(i) << "\t" << B.L2.at(i) << std::endl;
-			}
-		}
-	}
-
-	std::cout << "---" "\t" << "---" << std::endl;
-	std::cout << "L1" "\t" << "L2" << std::endl;
-	steps++;
-}
-/**
- * this function searches for the specified character in each of the block stacks.
- *
- * \param b the block data stucture to be analized
- * \param x the char to be searched for;
- *  returns true if it is in stack L1 and false if it is in stack L2
- */
-bool searchStacks(Blocks B, char x)
-{
-	if (!B.L1.empty()) {
-		for (int i = 0; i < B.L1.size(); i++)
-		{
-			if (B.L1.at(i) == x)
-			{
-				return true;
-			}
-		}
-	}
-	return false;
+	Node* temp = new Node;
+	temp->state = key;
+	return temp;
 }
 
 int main()
 {
-	Blocks Current;
-	Blocks Desired;
-	std::string tmp;
+	std::string L1, L2, arms;
 
 	//section for getting user input for the current and desired state
 	std::cout << "Accetpaple inputs are (a,b,c,d,e,f,g,h,i,j,k,l,m,n)\n Enter one of each 14 blocks\n";
-	std::cout << "Please enter the current state of the Blocks from bottom to top\nL1?";
-	std::cin >> tmp;
-	//tmp = "abcde";
+	std::cout << "Please enter the current state of the Blocks from bottom to top\n";
+	std::cout << "L1?\n";
+	//std::cin >> L1;
+	L1 = "abcd";
+	std::cout << "L2?\n";
+	//std::cin >> L2;
+	L2 = "efg";
+	std::cout << "Arms?\n";
+	//std::cin >> arms;
+	arms = "  ";
 
-	for (int i = 0; i < strlen(tmp.c_str()); i++)
-	{
-		Current.L1.push_back(tmp.c_str()[i]);
-	}
-	std::cout << "L2?";
+	Blocks* Initial = new Blocks(L1, L2, arms);
 
-	std::cin >> tmp;
-	//tmp = "fghijklmn";
-	for (int i = 0; i < strlen(tmp.c_str()); i++)
-	{
-		Current.L2.push_back(tmp.c_str()[i]);
-	}
+	std::cout << "Please enter the Desired state of the Blocks from bottom to top\n";
+	//std::cin >> L1;
+	L1 = "gef";
+	std::cout << "L2?\n";
+	//std::cin >> L2;
+	L2 = "cadb";
+	std::cout << "Arms?\n";
+	//std::cin >> arms;
+	arms = "  ";
 
-	std::cout << "Please enter the Desired state of the Blocks from bottom to top\nL1?";
-	std::cin >> tmp;
-	//tmp = "aejklmnfghd";
-	for (int i = 0; i < strlen(tmp.c_str()); i++)
-	{
-		Desired.L1.push_back(tmp.c_str()[i]);
-	}
-	std::cout << std::endl;
-	std::cout << "L2?";
+	Blocks* Desired = new Blocks(L1, L2, arms);
 
-	std::cin >> tmp;
-	//tmp = "cib";
-	for (int i = 0; i < strlen(tmp.c_str()); i++)
-	{
-		Desired.L2.push_back(tmp.c_str()[i]);
-	}
-
-	std::cout << "Desired Block state\n";
-	printBlocks(Desired);
-	std::cout << "Current Block state\n";
-	printBlocks(Current);
+	std::cout << "Desired Block state\n" << *Desired;
+	std::cout << "Current Block state\n" << *Initial;
 	std::cout << std::endl;
 
-	//Start the solve proccess
+	int stateCounter = 0;
+	std::vector<Blocks> states;
+	Blocks* Current = (Blocks*)malloc(sizeof Blocks);
+	Blocks* tmp = (Blocks*)malloc(sizeof Blocks);
+	memcpy(Current, Initial, sizeof Blocks);
 
-	steps = 0;
-	int stackIndex = 0;
-	//Step 1: Check to see if L1 Matches the desired L1
-	while (Desired.L1 != Current.L1)
+	Node* root = newNode(stateCounter);
+	std::cout << "Some Bull Shit Block state\n" << *Current;
+
+	states.push_back(*Current);
+
+	for (size_t i = 0; i < 6; i++)
 	{
-		//Step 1a: see if the bottom element matches, if so increment the stack index
-		//make sure stack has items in it, protects from out of range exception
-		if (!Current.L1.empty())
+		memcpy(tmp, Current, sizeof Blocks);
+
+		if (i == 0 && Current->movePre(0))
 		{
-			//more code stuff to protect from out of range exception
-			try
-			{
-				if (Current.L1.at(stackIndex) == Desired.L1.at(stackIndex))
-				{
-					stackIndex++;
-				}
-			}
-			catch (const std::exception&)
-			{
-				if (stackIndex > Current.L1.size())
-				{
-					stackIndex++;
-				}
-			}
+			//Do the action and make a tree node
+			tmp->move(0);
+			states.push_back(*tmp);
+			stateCounter++;
+			Node* root = newNode(stateCounter);
 		}
-		//Step 1b: determine which stack has the desired element in it.
-		if (searchStacks(Current, Desired.L1.at(stackIndex)))
+		else if (i == 1 && Current->movePre(1))
 		{
-			//Step 1c: unstack the identfied stack until the desired element is found
-			while (Current.L1.back() != Desired.L1.at(stackIndex))
-			{
-				std::cout << "Stacking " << Current.L1.back() << " to Stack L2 with Arm2" << std::endl;
-				Current.L2.push_back(Current.L1.back());
-				Current.L1.pop_back();
-				printBlocks(Current);
-			}
-			// after this is complete then the state should be L1 whith the desired block on top
-			//Step 1d:pick up the element into arm 1 to hold onto
-			std::cout << "Pick up " << Current.L1.back() << " in arm1" << std::endl;
-			Current.arm1 = Current.L1.back();
-			Current.L1.pop_back();
-			printBlocks(Current);
-			//Step 1e: unstack L1 until the desired index is reached
-			while (Current.L2.size() != stackIndex)
-			{
-				std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
-				Current.L1.push_back(Current.L2.back());
-				Current.L2.pop_back();
-				printBlocks(Current);
-			}
-			//Step 1f: put down the held block in the correct place
-			std::cout << "Put Down from Arm1" << Current.arm1 << "to Stack L2" << std::endl;
-			Current.L2.push_back(Current.arm1);
-			Current.arm1 = ' ';
-			printBlocks(Current);
+			tmp->move(1);
+			stateCounter++;
+			Node* root = newNode(stateCounter);
 		}
-		else
-		{//empty L2 in search of the desired block
-			while (Current.L2.back() != Desired.L1.at(stackIndex))
-			{
-				std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
-				Current.L1.push_back(Current.L2.back());
-				Current.L2.pop_back();
-				printBlocks(Current);
-			}
-			// after this is complete then the state should be L1 whith the desired block on top
-			//then we place it in arm 1 to hold onto
-			std::cout << "Pick up " << Current.L2.back() << " in arm1" << std::endl;
-			Current.arm1 = Current.L2.back();
-			Current.L2.pop_back();
-			printBlocks(Current);
-			//now that the block is in one of the arm i am going to move all of the block to L2 using arm 2
-			while (Current.L1.size() != stackIndex)
-			{
-				std::cout << "Stacking " << Current.L1.back() << " to Stack L2 with Arm2" << std::endl;
-				Current.L2.push_back(Current.L1.back());
-				Current.L1.pop_back();
-				printBlocks(Current);
-			}
-			// now place the arm2 block onto L1 `
-			std::cout << "Put Down from Arm1 " << Current.arm1 << " to Stack L1 " << std::endl;
-			Current.L1.push_back(Current.arm1);
-			Current.arm1 = ' ';
-			printBlocks(Current);
+		else if (i == 2 && Current->pickUpPre(0))
+		{
+			tmp->pickUp(0);
+			stateCounter++;
+			Node* root = newNode(stateCounter);
+		}
+		else if (i == 3 && Current->pickUpPre(1))
+		{
+			tmp->pickUp(1);
+			stateCounter++;
+			Node* root = newNode(stateCounter);
+		}
+		else if (i == 4 && Current->putDownPre(1))
+		{
+			tmp->putDown(0);
+			stateCounter++;
+			Node* root = newNode(stateCounter);
+		}
+		else if (i == 5 && Current->putDownPre(1))
+		{
+			tmp->putDown(1);
+			stateCounter++;
+			Node* root = newNode(stateCounter);
+		}
+
+		if (tmp->checkEqual(*Desired))
+		{
+			std::cout << "WTf we DID IT \n";
+			return stateCounter;
 		}
 	}
-	std::cout << "L1 is compelted in " << steps << " steps" << std::endl;
-	//now that Stack L1 is sorted it is time to move onto stack L2
-	// I also assume that all of the block are already in L2 just out of order.
-
-	stackIndex = 0;
-	int L2of = 0;
-	//Step 2: Check to see if L2 Matches Desired L2
-	while (Desired.L2 != Current.L2)
-	{
-		if (!Current.L2.empty())
-		{
-			try
-			{
-				if (Current.L2.at(stackIndex) == Desired.L2.at(stackIndex))
-				{
-					stackIndex++;
-				}
-				if (stackIndex > Desired.L2.size() - 1)
-				{
-					while (Desired.L2 != Current.L2)
-					{
-						if (Current.arm1 == ' ')
-						{
-							std::cout << "Pick up " << Current.L2.back() << " in arm1" << std::endl;
-							Current.arm1 = Current.L2.back();
-							Current.L2.pop_back();
-						}
-						else if (Current.arm2 == ' ')
-						{
-							std::cout << "Pick up " << Current.L2.back() << " in arm2" << std::endl;
-							Current.arm2 = Current.L2.back();
-							Current.L2.pop_back();
-						}
-					}
-					break;
-				}
-			}
-			catch (const std::exception&)
-			{
-				if (stackIndex > Current.L2.size())
-				{
-					stackIndex++;
-				}
-			}
-		}
-
-		if (searchStacks(Current, Desired.L2.at(stackIndex)))
-		{//empty L1 in search of the desired block
-			while (Current.L1.back() != Desired.L2.at(stackIndex))
-			{
-				std::cout << "Stacking " << Current.L1.back() << " to Stack L2 with Arm2" << std::endl;
-				Current.L2.push_back(Current.L1.back());
-				Current.L1.pop_back();
-				printBlocks(Current);
-			}
-			// after this is complete then the state should be L1 whith the desired block on top
-			//then we place it in arm 1 to hold onto
-			std::cout << "Pick up " << Current.L1.back() << " in arm1" << std::endl;
-			Current.arm1 = Current.L1.back();
-			Current.L1.pop_back();
-			printBlocks(Current);
-			//now that the block is in one of the arm i am going to move all of the block to L1 using arm 2
-			while (Current.L2.size() != stackIndex)
-			{
-				std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
-				Current.L1.push_back(Current.L2.back());
-				Current.L2.pop_back();
-				printBlocks(Current);
-			}
-			// now place the arm2 block onto L1 `
-			std::cout << "Put Down from Arm1 " << Current.arm1 << " to Stack L2" << std::endl;
-			Current.L2.push_back(Current.arm1);
-			Current.arm1 = ' ';
-			printBlocks(Current);
-		}
-		else
-		{//empty L1 in search of the desired block
-			while (Current.L2.back() != Desired.L2.at(stackIndex))
-			{
-				std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
-				Current.L1.push_back(Current.L2.back());
-				Current.L2.pop_back();
-				printBlocks(Current);
-			}
-			// after this is complete then the state should be L1 whith the desired block on top
-			//then we place it in arm 1 to hold onto
-			std::cout << "Pick up " << Current.L2.back() << " in arm1" << std::endl;
-			Current.arm1 = Current.L2.back();
-			Current.L2.pop_back();
-			printBlocks(Current);
-			//now that the block is in one of the arm, move all of the block to L1 using arm 2
-			while (Current.L2.size() != stackIndex)
-			{
-				std::cout << "Stacking " << Current.L2.back() << " to Stack L1 with Arm2" << std::endl;
-				Current.L1.push_back(Current.L2.back());
-				Current.L2.pop_back();
-				printBlocks(Current);
-			}
-			// now place the arm1 block onto L2
-			std::cout << "Put Down from Arm1 " << Current.arm1 << " to Stack L2" << std::endl;
-			Current.L2.push_back(Current.arm1);
-			Current.arm1 = ' ';
-			printBlocks(Current);
-		}
-	}
-
-	//Step 3: make sure that any extras put on L1 are assumed to be part of the arms
-	while (Desired.L1 != Current.L1)
-	{
-		if (Current.arm1 == ' ')
-		{
-			std::cout << "Pick up " << Current.L1.back() << " in arm1" << std::endl;
-			Current.arm1 = Current.L1.back();
-			Current.L1.pop_back();
-		}
-		else if (Current.arm2 == ' ')
-		{
-			std::cout << "Pick up " << Current.L1.back() << " in arm2" << std::endl;
-			Current.arm2 = Current.L1.back();
-			Current.L1.pop_back();
-		}
-		else
-		{
-			return -10;
-		}
-	}
-
-
-	//Step 4: Declare success
-	std::cout << "everything is compelte this took " << steps << " steps" << std::endl;
-
-	std::cout << "Desired Block state\n";
-	printBlocks(Desired);
-	std::cout << "Current Block state\n";
-	printBlocks(Current);
-	std::cout << std::endl;
 }
